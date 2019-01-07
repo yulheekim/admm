@@ -74,7 +74,7 @@ def ADMM_super(y,h,K,lam,method,opts):
     Gty       = upf(y, defGGt_h, defGGt_K)
     # v         = imresize(y,K)
     v         = skimage.transform.resize(y, (np.shape(y)[0]*K,np.shape(y)[1]*K)) # can't find a good replacement here...
-
+    
     x         = v
     u         = np.zeros(np.shape(v))
     residual  = float("inf")
@@ -115,7 +115,7 @@ def ADMM_super(y,h,K,lam,method,opts):
         vtilde = x+u
         vtilde = proj(vtilde) # should be 512x512
         sigma  = math.sqrt(lam/rho)
-        v      = pybm3d.bm3d.bm3d(vtilde,sigma) #BM3D
+        v      = pybm3d.bm3d.bm3d(vtilde,sigma) # BM3D(noisy_img, noise_std_dev)  source: https://github.com/ericmjonas/pybm3d
 
 
         # %update langrangian multiplier

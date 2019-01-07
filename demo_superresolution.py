@@ -38,8 +38,6 @@ def psnr(img1, img2):
 img = cv2.imread('./data/Couple512.png', cv2.IMREAD_GRAYSCALE) # Read image here
 z = cv2.normalize(img.astype('float'), None, 0.0, 1.0, cv2.NORM_MINMAX)
 print(np.shape(z))
-# plt.imshow(z, cmap='gray')
-# plt.show()
 
 # blur kernel and downsampling factor
 h = matlab_style_gauss2D((9, 9),1);
@@ -52,24 +50,17 @@ noise_level = 10/255;
 y = scipy.ndimage.correlate(z, h, mode='wrap').transpose()
 # y = downsample2(y,K);
 y = np.transpose(np.transpose(y[0::K])[0::K])
-y = y + noise_level*np.random.randn(len(y), len(y[0]));
-# show low resolution image
-plt.imshow(y, cmap='gray')
-plt.show()
+y = y + noise_level*np.random.randn(len(y), len(y[0]))
 
 # # %parameters
 method = 'BM3D'
-# switch method
-#     case 'RF'
-#         lam = 0.0002;
-#     case 'NLM'
-#         lam = 0.001;
-#     case 'BM3D'
-#         lam = 0.001;
-#     case 'TV'
-#         lam = 0.01;
-# end
-lam = 0.001
+if method == 'RF':
+    lam = 0.0002
+elif method == 'NLM' or method == 'BM3D':
+    lam = 0.001
+else:
+    lam = 0.01
+
 # # %optional parameters
 opts={}
 opts['rho']     = 1
@@ -78,21 +69,19 @@ opts['max_itr'] = 20
 opts['print']   = True
 #
 # # %main routine
-# tic
 out = ADMM_super(y,h,K,lam,method,opts)
-plt.imshow(out, cmap='gray')
-plt.show()
-# toc
+
 # # %display
 PSNR_output = psnr(out,z);
-print('PSNR = ' + str(PSNR_output) + ' dB')
-#
-# figure;
-# subplot(121);
-# imshow(imresize(y,K,'nearest'));
-# title('Input');
-#
-# subplot(122);
-# imshow(out);
-# tt = sprintf('PSNR = %3.2f dB', PSNR_output);
-# title(tt);
+tt = 'PSNR = ' + str(PSNR_output) + ' dB'
+print(tt)
+
+plt.figure(1)
+plt.subplot(121)
+plt.title('Input')
+plt.imshow(y.transpose(), cmap='gray')
+
+plt.subplot(122)
+plt.imshow(out, cmap='gray')
+plt.title(tt)
+plt.show()
