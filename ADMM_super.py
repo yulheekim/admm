@@ -74,24 +74,10 @@ def ADMM_super(y,h,K,lam,method,opts):
     Gty       = upf(y, defGGt_h, defGGt_K)
     # v         = imresize(y,K)
     v         = skimage.transform.resize(y, (np.shape(y)[0]*K,np.shape(y)[1]*K)) # can't find a good replacement here...
-    
+
     x         = v
     u         = np.zeros(np.shape(v))
     residual  = float("inf")
-
-    # %set function handle for denoiser
-    # switch method
-    #     case 'BM3D'
-    #         denoise=@wrapper_BM3D
-    #     case 'TV'
-    #         denoise=@wrapper_TV
-    #     case 'NLM'
-    #         denoise=@wrapper_NLM
-    #     case 'RF'
-    #         denoise=@wrapper_RF
-    #     otherwise
-    #         error('unknown denoiser \n')
-    # end
 
     # % main loop
     if opts['print']==True:
