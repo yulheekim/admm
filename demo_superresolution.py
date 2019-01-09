@@ -75,6 +75,10 @@ out = ADMM_super(y,h,K,lam,method,opts)
 PSNR_output = psnr(out,z);
 tt = 'PSNR = ' + str(PSNR_output) + ' dB'
 print(tt)
+# saving images used to calculate psnr
+# import scipy.misc
+# scipy.misc.imsave('in.jpg', z)
+# scipy.misc.imsave('out.jpg', out)
 
 plt.figure(1)
 plt.subplot(121)
